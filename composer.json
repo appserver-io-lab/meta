@@ -1,0 +1,43 @@
+{
+	"type" : "project",
+	"name" : "appserver-io/meta",
+	"description" : "Meta package for installation of appserver.io PHP multithreaded application server",
+	"homepage" : "https://github.com/appserver-io/meta",
+	"license" : "OSL-3.0",
+	"require" : {
+		"php" : ">=5.4.0",
+		"ext-pthreads" : "1.0.*",
+		"nikic/phlexy" : "dev-master",
+		"techdivision/appserver" : "0.9.*",
+		"techdivision/webserver" : "0.2.*",
+		"techdivision/rewritemodule" : "0.6.*",
+		"techdivision/phpmodule" : "0.1.*",
+		"techdivision/fastcgimodule" : "0.1.*",
+		"techdivision/persistencecontainer" : "0.8.*",
+		"techdivision/messagequeue" : "0.8.*",
+		"techdivision/servletengine" : "0.7.*",
+		"techdivision/websocketserver" : "0.3.*",
+		"techdivision/memcacheserver" : "0.1.*"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : "3.7.*"
+	},
+	"config" : {
+		"github-oauth" : {
+			"github.com" : "604a3b5943228e434a5b52c2ba3cf72286d30db9"
+		}
+	},
+	"autoload" : {
+		"files" : [
+			"var/scripts/functions.php"
+		]
+	},
+	"scripts" : {
+		"post-install-cmd" : [
+			"TechDivision\\ApplicationServer\\Composer\\Script\\Setup::postInstall"
+		],
+		"post-update-cmd" : [
+			"TechDivision\\ApplicationServer\\Composer\\Script\\Setup::postUpdate"
+		]
+	}
+}

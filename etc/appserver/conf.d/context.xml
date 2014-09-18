@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<context type="TechDivision\Application\Application">
+
+    <classLoaders>
+        <classLoader
+            name="composer"
+            type="TechDivision\ApplicationServer\ComposerClassLoader">
+            <directories>
+                <directory>/vendor</directory>
+            </directories>
+        </classLoader>
+        <classLoader
+            name="pbc"
+            type="TechDivision\ApplicationServer\PbcClassLoader">
+            <params>
+                <param name="environment" type="string">production</param>
+                <param name="enforcementLevel" type="integer">7</param>
+                <param name="typeSafety" type="boolean">1</param>
+                <param name="processing" type="string">logging</param>
+            </params>
+            <directories>
+                <directory enforced="true">/WEB-INF/classes</directory>
+                <directory enforced="true">/META-INF/classes</directory>
+            </directories>
+        </classLoader>
+    </classLoaders>
+
+    <managers>
+        <manager name="handler" type="TechDivision\WebSocketServer\HandlerManager"/>
+        <manager name="bean" type="TechDivision\PersistenceContainer\BeanManager">
+            <!-- params>
+                <param name="lifetime" type="integer">1440</param>
+                <param name="garbageCollectionProbability" type="float">0.1</param>
+            </params -->
+        </manager>
+        <manager name="queue" type="TechDivision\MessageQueue\QueueManager"/>
+        <manager name="servlet" type="TechDivision\ServletEngine\ServletManager"/>
+        <manager name="session" type="TechDivision\ServletEngine\StandardSessionManager"/>
+        <manager name="timerservice" type="TechDivision\PersistenceContainer\TimerServiceRegistry"/>
+        <manager name="authentication" type="TechDivision\ServletEngine\Authentication\StandardAuthenticationManager"/>
+    </managers>
+
+</context>
