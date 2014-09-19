@@ -112,8 +112,8 @@ use AppserverIo\Meta\Composer\Script\Setup;
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
                         <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
-                        <param name="address" type="string">0.0.0.0</param>
-                        <param name="port" type="integer">11210</param>
+                        <param name="address" type="string"><?php echo Setup::getValue('appserver.memcached.host') ?></param>
+                        <param name="port" type="integer"><?php echo Setup::getValue('appserver.memcached.port') ?></param>
                         <param name="workerNumber" type="integer"><?php echo Setup::getValue('container.memcached.worker.number') ?></param>
                         <param name="workerAcceptMin" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMin') ?></param>
                         <param name="workerAcceptMax" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMax') ?></param>
@@ -144,8 +144,8 @@ use AppserverIo\Meta\Composer\Script\Setup;
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
                         <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
-                        <param name="address" type="string">0.0.0.0</param>
-                        <param name="port" type="integer">8585</param>
+                        <param name="address" type="string"><?php echo Setup::getValue('appserver.persistence-container.host') ?></param>
+                        <param name="port" type="integer"><?php echo Setup::getValue('appserver.persistence-container.port') ?></param>
                         <param name="workerNumber" type="integer"><?php echo Setup::getValue('container.persistence-container.worker.number') ?></param>
                         <param name="workerAcceptMin" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMin') ?></param>
                         <param name="workerAcceptMax" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMax') ?></param>
@@ -205,8 +205,8 @@ use AppserverIo\Meta\Composer\Script\Setup;
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
                         <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
-                        <param name="address" type="string">0.0.0.0</param>
-                        <param name="port" type="integer">8587</param>
+                        <param name="address" type="string"><?php echo Setup::getValue('appserver.message-queue.host') ?></param>
+                        <param name="port" type="integer"><?php echo Setup::getValue('appserver.message-queue.port') ?></param>
                         <param name="workerNumber" type="integer"><?php echo Setup::getValue('container.message-queue.worker.number') ?></param>
                         <param name="workerAcceptMin" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMin') ?></param>
                         <param name="workerAcceptMax" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMax') ?></param>
@@ -264,8 +264,8 @@ use AppserverIo\Meta\Composer\Script\Setup;
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
                         <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
-                        <param name="address" type="string">0.0.0.0</param>
-                        <param name="port" type="integer">8589</param>
+                        <param name="address" type="string"><?php echo Setup::getValue('appserver.web-socket.host') ?></param>
+                        <param name="port" type="integer"><?php echo Setup::getValue('appserver.web-socket.port') ?></param>
                         <param name="documentRoot" type="string">webapps</param>
                         <param name="errorsPageTemplatePath" type="string">var/www/errors/error.phtml</param>
                     </params>
@@ -292,8 +292,8 @@ use AppserverIo\Meta\Composer\Script\Setup;
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
                         <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
-                        <param name="address" type="string">0.0.0.0</param>
-                        <param name="port" type="integer">9080</param>
+                        <param name="address" type="string"><?php echo Setup::getValue('appserver.http.host') ?></param>
+                        <param name="port" type="integer"><?php echo Setup::getValue('appserver.http.port') ?></param>
                         <param name="workerNumber" type="integer"><?php echo Setup::getValue('container.http.worker.number') ?></param>
                         <param name="workerAcceptMin" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMin') ?></param>
                         <param name="workerAcceptMax" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMax') ?></param>
@@ -391,8 +391,8 @@ use AppserverIo\Meta\Composer\Script\Setup;
                         <param name="workerAcceptMin" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMin') ?></param>
                         <param name="workerAcceptMax" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMax') ?></param>
                         <param name="transport" type="string">ssl</param>
-                        <param name="address" type="string">0.0.0.0</param>
-                        <param name="port" type="integer">9443</param>
+                        <param name="address" type="string"><?php echo Setup::getValue('appserver.https.host') ?></param>
+                        <param name="port" type="integer"><?php echo Setup::getValue('appserver.https.port') ?></param>
                         <param name="certPath" type="string">etc/appserver/server.pem</param>
                         <param name="passphrase" type="string"></param>
                         <param name="documentRoot" type="string">webapps</param>
