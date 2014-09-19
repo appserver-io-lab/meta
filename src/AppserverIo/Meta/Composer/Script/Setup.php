@@ -22,13 +22,13 @@ use Composer\Script\Event;
  * Class that provides functionality that'll be executed by composer
  * after installation or update of the application server.
  *
- * @category   Appserver
+ * @category Appserver
  * @subpackage Composer
- * @package    TechDivision_ApplicationServer
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @package TechDivision_ApplicationServer
+ * @author Tim Wagner <tw@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link http://www.appserver.io
  */
 class Setup
 {
@@ -67,21 +67,21 @@ class Setup
      * @var array
      */
     protected static $defaultProperties = array(
-        'appserver.php.version'                         => PHP_VERSION,
-        'appserver.version'                             => '1.0.0-alpha',
-        'appserver.admin.email'                         => 'info@appserver.io',
-        'container.server.worker.acceptMin'             => 3,
-        'container.server.worker.acceptMax'             => 8,
-        'container.http.worker.number'                  => 64,
-        'container.https.worker.number'                 => 64,
+        'appserver.php.version' => PHP_VERSION,
+        'appserver.version' => '1.0.0-alpha',
+        'appserver.admin.email' => 'info@appserver.io',
+        'container.server.worker.acceptMin' => 3,
+        'container.server.worker.acceptMax' => 8,
+        'container.http.worker.number' => 64,
+        'container.https.worker.number' => 64,
         'container.persistence-container.worker.number' => 64,
-        'container.memcached.worker.number'             => 8,
-        'container.message-queue.worker.number'         => 8,
-        'php-fpm.port'                                  => 9100,
-        'php-fpm.host'                                  => '127.0.0.1',
-        'appserver.umask'                               => '0002',
-        'appserver.user'                                => 'nobody',
-        'appserver.group'                               => 'nobody'
+        'container.memcached.worker.number' => 8,
+        'container.message-queue.worker.number' => 8,
+        'php-fpm.port' => 9100,
+        'php-fpm.host' => '127.0.0.1',
+        'appserver.umask' => '0002',
+        'appserver.user' => 'nobody',
+        'appserver.group' => 'nobody'
     );
 
     /**
@@ -109,7 +109,7 @@ class Setup
 
         // declare Linux distros(extensible list).
         $distros = array(
-            "arch"   => "arch-release",
+            "arch" => "arch-release",
             "debian" => "debian_version",
             "fedora" => "fedora-release",
             "ubuntu" => "lsb-release",
@@ -126,14 +126,14 @@ class Setup
         foreach ($etcList as $entry) { // iterate over all found files
 
             // loop through list of distros..
-            foreach ($distros as $distroReleaseFile)  {
+            foreach ($distros as $distroReleaseFile) {
 
                 // match was found.
                 if ($distroReleaseFile === $entry) {
 
                     // find distros array key (i.e. distro name) by value (i.e. distro release file)
                     $distro = array_search($distroReleaseFile, $distros);
-                    break 2;// break inner and outer loop.
+                    break 2; // break inner and outer loop.
                 }
             }
         }
@@ -151,11 +151,9 @@ class Setup
      */
     public static function prepareProperties($os)
     {
-        Setup::$mergedProperties = array_merge(
-            array('install.dir' => getcwd()),
-            Setup::$defaultProperties,
-            Setup::$osProperties[$distribution]
-        );
+        Setup::$mergedProperties = array_merge(array(
+            'install.dir' => getcwd()
+        ), Setup::$defaultProperties, Setup::$osProperties[$os]);
     }
 
     /**
@@ -188,7 +186,9 @@ class Setup
                     // write a message to the console
                     $event->getIo()->write(
                         sprintf(
-                            '<warning>Unknown Linux distribution found, use Debian default values: Please check user/group in etc/appserver/appserver.xml</warning>')
+                            '<warning>Unknown Linux distribution found, use Debian default values: ' .
+                            'Please check user/group configuration in etc/appserver/appserver.xml</warning>'
+                        )
                     );
                 }
 
@@ -197,8 +197,8 @@ class Setup
 
                 // process the binaries for the systemd services on Fedora
                 if ($distribution === 'fedora' || $distribution === 'redhat') {
-                    Setup::processTemplate('bin/appserver');
-                    Setup::processTemplate('bin/appserver-watcher');
+                    Setup::processTemplate('bin/appserver', 0775);
+                    Setup::processTemplate('bin/appserver-watcher', 0775);
                 }
                 break;
 
@@ -209,9 +209,9 @@ class Setup
                 Setup::prepareProperties($os);
 
                 // process the control files for the launchctl service
-                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserverctl');
-                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserver-watcherctl');
-                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserver-php5-fpmctl');
+                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserverctl', 0775);
+                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserver-watcherctl', 0775);
+                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserver-php5-fpmctl', 0775);
 
                 // process the binaries for the launchctl service
                 Setup::processTemplate('bin/appserver');
@@ -251,27 +251,67 @@ class Setup
     /**
      * Copies the passed OS specific resource file to the target directory.
      *
-     * @param string $os       The OS we want to copy the files for
-     * @param string $resource The resource file we want to copy
+     * @param string  $os       The OS we want to copy the files for
+     * @param string  $resource The resource file we want to copy
+     * @param integer $mode     The mode of the target file
      *
      * @return void
      */
-    public static function copyOsSpecificResource($os, $resource)
+    public static function copyOsSpecificResource($os, $resource, $mode = 0664)
     {
-        copy($resource, sprintf('resources/os-specific/%s/%s', $os, $resource));
+
+        // we need the installation directory
+        $installDir = Setup::getValue('install.dir');
+
+        // prepare source and target directory
+        $source = sprintf('%s/resources/os-specific/%s/%s', $installDir, $os, $resource);
+        $target = sprintf('%s/%s', $installDir, $resource);
+
+        // prepare the target directory
+        Setup::prepareDirectory($target);
+
+        // copy the file to the target directory
+        copy($source, $target);
+
+        // set the correct mode
+        chmod($target, $mode);
     }
 
     /**
      * Processes the template and replace the properties with the OS specific values.
      *
      * @param string $template The path to the template
+     * @param integer $mode    The mode of the target file
      *
      * @return void
      */
-    public static function processTemplate($template)
+    public static function processTemplate($template, $mode = 0664)
     {
+
+        // prepare the target directory
+        Setup::prepareDirectory($template);
+
+        // process the template and store the result in the passed file
         ob_start();
         include sprintf('resources/templates/%s.phtml', $template);
         file_put_contents($template, ob_get_clean());
+
+        // set the correct mode
+        chmod($template, $mode);
+    }
+
+    /**
+     * Prepares the passed directory if necessary.
+     *
+     * @param string  $directory The directory to prepare
+     * @param integer $mode      The mode of the directory
+     *
+     * @return void
+     */
+    public static function prepareDirectory($directory, $mode = 0775)
+    {
+        if (is_dir(dirname($directory)) === false) {
+            mkdir(dirname($directory), $mode, true);
+        }
     }
 }
