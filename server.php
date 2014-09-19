@@ -50,7 +50,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 // initialize configuration and schema file name
 $configurationFileName = DirectoryKeys::realpath(sprintf('%s/%s/appserver.xml', APPSERVER_BP, DirectoryKeys::CONF));
-$schemaFileName = DirectoryKeys::realpath(sprintf('%s/app/resources/schema/appserver.xsd', APPSERVER_BP));
+$schemaFileName = DirectoryKeys::realpath(sprintf('%s/resources/schema/appserver.xsd', APPSERVER_BP));
 
 // initialize the DOMDocument with the configuration file to be validated
 $configurationFile = new \DOMDocument();
