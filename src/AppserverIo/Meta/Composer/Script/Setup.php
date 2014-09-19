@@ -225,6 +225,10 @@ class Setup
 
                 // merge the properties for Windows
                 Setup::prepareProperties($os);
+
+                // process the control files for the launchctl service
+                Setup::copyOsSpecificResource(Setup::WINDOWS, 'appserver.bat');
+                Setup::copyOsSpecificResource(Setup::WINDOWS, 'appserver-php5-fpm.bat');
                 break;
 
             // all other OS are NOT supported actually
@@ -275,8 +279,8 @@ class Setup
         // copy the file to the target directory
         copy($source, $target);
 
-        // set the correct mode
-        chmod($target, $mode);
+        // set the correct mode for the file
+        Setup::changeFilePermissions($target, $mode);
     }
 
     /**
@@ -298,8 +302,23 @@ class Setup
         include sprintf('resources/templates/%s.phtml', $template);
         file_put_contents($template, ob_get_clean());
 
-        // set the correct mode
-        chmod($template, $mode);
+        // set the correct mode for the file
+        Setup::changeFilePermissions($template, $mode);
+    }
+
+    /**
+     * Sets the passed mode for the file if NOT on Windows.
+     *
+     * @param string  $filename The filename to set the mode for
+     * @param integer $mode     The mode to set
+     *
+     * @return void
+     */
+    public static function changeFilePermissions($filename, $mode = 0644)
+    {
+        if (Setup::WINDOWS !== strtolower(php_uname('s'))) {
+            chmod($filename, $mode);
+        }
     }
 
     /**
