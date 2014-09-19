@@ -15,12 +15,13 @@
  */
 
 use AppserverIo\Meta\Composer\Script\Setup;
+use AppserverIo\Meta\Composer\Script\SetupKeys;
 
 ?>
 #!/bin/bash
 
 # Set the default appserver installation directory
-APPSERVER_ROOT="<?php echo Setup::getValue('install.dir') ?>"
+APPSERVER_ROOT="<?php echo Setup::getValue(SetupKeys::INSTALL_DIR) ?>"
 
 # cd into the installation dir
 cd $APPSERVER_ROOT
