@@ -15,11 +15,12 @@
  */
 
 use AppserverIo\Meta\Composer\Script\Setup;
+use AppserverIo\Meta\Composer\Script\SetupKeys;
 
 ?>
 #!/bin/bash
 
-APPSERVER_ROOT="<?php echo Setup::getValue('install.dir') ?>"
+APPSERVER_ROOT="<?php echo Setup::getValue(SetupKeys::INSTALL_DIR) ?>"
 
 cd $APPSERVER_ROOT
 $APPSERVER_ROOT/bin/php -dappserver.php_sapi=appserver -dappserver.remove_functions=getenv,putenv -f server.php -- -w

@@ -5,12 +5,13 @@
  *
  * PHP version 5
  *
- * @category   Appserver
+ * @category   Library
  * @subpackage Composer
- * @package    TechDivision_ApplicationServer
+ * @package    Meta
  * @author     Tim Wagner <tw@techdivision.com>
  * @copyright  2014 TechDivision GmbH <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://github.com/appserver-io/routlt
  * @link       http://www.appserver.io
  */
 
@@ -22,37 +23,17 @@ use Composer\Script\Event;
  * Class that provides functionality that'll be executed by composer
  * after installation or update of the application server.
  *
- * @category Appserver
+ * @category   Library
  * @subpackage Composer
- * @package TechDivision_ApplicationServer
- * @author Tim Wagner <tw@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
- * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link http://www.appserver.io
+ * @package    Meta
+ * @author     Tim Wagner <tw@techdivision.com>
+ * @copyright  2014 TechDivision GmbH <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://github.com/appserver-io/routlt
+ * @link       http://www.appserver.io
  */
 class Setup
 {
-
-    /**
-     * OS signature when calling php_uname('s') on Mac OS x 10.8.x/10.9.x.
-     *
-     * @var string
-     */
-    const DARWIN = 'darwin';
-
-    /**
-     * OS signature when calling php_uname('s') on Linux Debian/Ubuntu/Fedora and CentOS.
-     *
-     * @var string
-     */
-    const LINUX = 'linux';
-
-    /**
-     * OS signature when calling php_uname('s') on Windows.
-     *
-     * @var string
-     */
-    const WINDOWS = 'windows';
 
     /**
      * The array with the merged and os specific template variables.
@@ -67,33 +48,32 @@ class Setup
      * @var array
      */
     protected static $defaultProperties = array(
-        'appserver.php.version' => PHP_VERSION,
-        'appserver.version' => '1.0.0-alpha',
-        'appserver.admin.email' => 'info@appserver.io',
-        'container.server.worker.acceptMin' => 3,
-        'container.server.worker.acceptMax' => 8,
-        'container.http.worker.number' => 64,
-        'container.http.host' => '127.0.0.1',
-        'container.http.port' => 9080,
-        'container.https.worker.number' => 64,
-        'container.https.host' => '127.0.0.1',
-        'container.https.port' => 9443,
-        'container.persistence-container.worker.number' => 64,
-        'container.persistence-container.host' => '127.0.0.1',
-        'container.persistence-container.port' => 8585,
-        'container.memcached.worker.number' => 8,
-        'container.memcached.host' => '127.0.0.1',
-        'container.memcached.port' => 11210,
-        'container.message-queue.worker.number' => 8,
-        'container.message-queue.host' => '127.0.0.1',
-        'container.message-queue.port' => 8587,
-        'appserver.web-socket.host' => '127.0.0.1',
-        'appserver.web-socket.port' => 8589,
-        'php-fpm.port' => 9100,
-        'php-fpm.host' => '127.0.0.1',
-        'appserver.umask' => '0002',
-        'appserver.user' => 'nobody',
-        'appserver.group' => 'nobody'
+        SetupKeys::PHP_VERSION                                   => PHP_VERSION,
+        SetupKeys::ADMIN_EMAIL                                   => 'info@appserver.io',
+        SetupKeys::CONTAINER_SERVER_WORKER_ACCEPT_MIN            => 3,
+        SetupKeys::CONTAINER_SERVER_WORKER_ACCEPT_MAX            => 8,
+        SetupKeys::CONTAINER_HTTP_WORKER_NUMBER                  => 64,
+        SetupKeys::CONTAINER_HTTP_HOST                           => '127.0.0.1',
+        SetupKeys::CONTAINER_HTTP_PORT                           => 9080,
+        SetupKeys::CONTAINER_HTTPS_WORKER_NUMBER                 => 64,
+        SetupKeys::CONTAINER_HTTPS_HOST                          => '127.0.0.1',
+        SetupKeys::CONTAINER_HTTPS_PORT                          => 9443,
+        SetupKeys::CONTAINER_PERSISTENCE_CONTAINER_WORKER_NUMBER => 64,
+        SetupKeys::CONTAINER_PERSISTENCE_CONTAINER_HOST          => '127.0.0.1',
+        SetupKeys::CONTAINER_PERSISTENCE_CONTAINER_PORT          => 8585,
+        SetupKeys::CONTAINER_MEMCACHED_WORKER_NUMBER             => 8,
+        SetupKeys::CONTAINER_MEMCACHED_HOST                      => '127.0.0.1',
+        SetupKeys::CONTAINER_MEMCACHED_PORT                      => 11210,
+        SetupKeys::CONTAINER_MESSAGE_QUEUE_WORKER_NUMBER         => 8,
+        SetupKeys::CONTAINER_MESSAGE_QUEUE_HOST                  => '127.0.0.1',
+        SetupKeys::CONTAINER_MESSAGE_QUEUE_PORT                  => 8587,
+        SetupKeys::CONTAINER_WEB_SOCKET_HOST                     => '127.0.0.1',
+        SetupKeys::CONTAINER_WEB_SOCKET_PORT                     => 8589,
+        SetupKeys::PHP_FPM_PORT                                  => 9100,
+        SetupKeys::PHP_FPM_HOST                                  => '127.0.0.1',
+        SetupKeys::UMASK                                         => '0002',
+        SetupKeys::USER                                          => 'nobody',
+        SetupKeys::GROUP                                         => 'nobody'
     );
 
     /**
@@ -102,13 +82,13 @@ class Setup
      * @var array
      */
     protected static $osProperties = array(
-        'darwin'  => array('os.family' => Setup::DARWIN, 'appserver.group' => 'staff'),
-        'debian'  => array('os.family' => Setup::LINUX,  'appserver.group' => 'www-data', 'appserver.user' => 'www-data'),
-        'ubuntu'  => array('os.family' => Setup::LINUX,  'appserver.group' => 'www-data', 'appserver.user' => 'www-data'),
-        'fedora'  => array('os.family' => Setup::LINUX),
-        'redhat'  => array('os.family' => Setup::LINUX),
-        'centOS'  => array('os.family' => Setup::LINUX),
-        'windows' => array('os.family' => Setup::WINDOWS)
+        SetupKeys::OS_DARWIN  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_DARWIN, SetupKeys::GROUP => 'staff'),
+        SetupKeys::OS_DEBIAN  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_LINUX,  SetupKeys::GROUP => 'www-data', SetupKeys::USER => 'www-data'),
+        SetupKeys::OS_UBUNTU  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_LINUX,  SetupKeys::GROUP => 'www-data', SetupKeys::USER => 'www-data'),
+        SetupKeys::OS_FEDORA  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_LINUX),
+        SetupKeys::OS_REDHAT  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_LINUX),
+        SetupKeys::OS_CENTOS  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_LINUX),
+        SetupKeys::OS_WINDOWS => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_WINDOWS)
     );
 
     /**
@@ -119,14 +99,14 @@ class Setup
     public static function getLinuxDistro()
     {
 
-        // declare Linux distros(extensible list).
+        // declare Linux distros (extensible list).
         $distros = array(
-            "arch" => "arch-release",
-            "debian" => "debian_version",
-            "fedora" => "fedora-release",
-            "ubuntu" => "lsb-release",
-            'redhat' => 'redhat-release',
-            'centOS' => 'centos-release'
+            SetupKeys::OS_ARCH   => 'arch-release',
+            SetupKeys::OS_DEBIAN => 'debian_version',
+            SetupKeys::OS_FEDORA => 'fedora-release',
+            SetupKeys::OS_UBUNTU => 'lsb-release',
+            SetupKeys::OS_REDHAT => 'redhat-release',
+            SetupKeys::OS_CENTOS => 'centos-release'
         );
 
         // get everything from /etc directory.
@@ -161,12 +141,22 @@ class Setup
      *
      * @return void
      */
-    public static function prepareProperties($os)
+    public static function prepareProperties($os, array $contextProperties)
     {
+
+        // merge all properties
         Setup::$mergedProperties = array_merge(
-            array('install.dir' => getcwd()),
+            $contextProperties,
             Setup::$defaultProperties,
             Setup::$osProperties[$os]
+        );
+
+        // prepare the properties that has to be merge out of other ones
+        Setup::$mergedProperties[SetupKeys::SOFTWARE_IDENTIFIER] = sprintf(
+            'appserver/%s (%s) PHP/%s',
+            Setup::$mergedProperties[SetupKeys::VERSION],
+            Setup::$mergedProperties[SetupKeys::OS_FAMILY],
+            Setup::$mergedProperties[SetupKeys::PHP_VERSION]
         );
     }
 
@@ -181,6 +171,15 @@ class Setup
     public static function postInstall(Event $event)
     {
 
+        // load the version of this package => the appserver version
+        $version = $event->getComposer()->getPackage()->getVersion();
+
+        // prepare the context properties
+        $contextProperties = array(
+            SetupKeys::INSTALL_DIR => getcwd(),
+            SetupKeys::VERSION = $version
+        );
+
         // load the OS signature
         $os = strtolower(php_uname('s'));
 
@@ -188,14 +187,14 @@ class Setup
         switch ($os) {
 
             // installation running on Linux
-            case Setup::LINUX:
+            case SetupKeys::OS_FAMILY_LINUX:
 
                 // get the distribution
                 $distribution = Setup::getLinuxDistribution();
                 if ($distribution == null) { // if we cant find one of the supported systems
 
                     // set debian as default
-                    $distribution = 'debian';
+                    $distribution = SetupKeys::OS_DEBIAN;
 
                     // write a message to the console
                     $event->getIo()->write(
@@ -207,25 +206,25 @@ class Setup
                 }
 
                 // merge the properties for the found Linux distribution
-                Setup::prepareProperties($distribution);
+                Setup::prepareProperties($distribution, $contextProperties);
 
                 // process the binaries for the systemd services on Fedora
-                if ($distribution === 'fedora' || $distribution === 'redhat') {
+                if ($distribution === SetupKeys::OS_FEDORA || $distribution === SetupKeys::OS_REDHAT) {
                     Setup::processTemplate('bin/appserver', 0775);
                     Setup::processTemplate('bin/appserver-watcher', 0775);
                 }
                 break;
 
             // installation running on Mac OS X
-            case Setup::DARWIN:
+            case SetupKeys::OS_FAMILY_DARWIN:
 
                 // merge the properties for Mac OS X
-                Setup::prepareProperties($os);
+                Setup::prepareProperties($os $contextProperties);
 
                 // process the control files for the launchctl service
-                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserverctl', 0775);
-                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserver-watcherctl', 0775);
-                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserver-php5-fpmctl', 0775);
+                Setup::copyOsSpecificResource(SetupKeys::OS_DARWIN, 'sbin/appserverctl', 0775);
+                Setup::copyOsSpecificResource(SetupKeys::OS_DARWIN, 'sbin/appserver-watcherctl', 0775);
+                Setup::copyOsSpecificResource(SetupKeys::OS_DARWIN, 'sbin/appserver-php5-fpmctl', 0775);
 
                 // process the binaries for the launchctl service
                 Setup::processTemplate('bin/appserver');
@@ -233,14 +232,14 @@ class Setup
                 break;
 
             // installation running on Windows
-            case Setup::WINDOWS:
+            case SetupKeys::OS_FAMILY_WINDOWS:
 
                 // merge the properties for Windows
-                Setup::prepareProperties($os);
+                Setup::prepareProperties($os $contextProperties);
 
                 // process the control files for the launchctl service
-                Setup::copyOsSpecificResource(Setup::WINDOWS, 'appserver.bat');
-                Setup::copyOsSpecificResource(Setup::WINDOWS, 'appserver-php5-fpm.bat');
+                Setup::copyOsSpecificResource(SetupKeys::OS_WINDOWS, 'appserver.bat');
+                Setup::copyOsSpecificResource(SetupKeys::OS_WINDOWS, 'appserver-php5-fpm.bat');
                 break;
 
             // all other OS are NOT supported actually
@@ -279,7 +278,7 @@ class Setup
     {
 
         // we need the installation directory
-        $installDir = Setup::getValue('install.dir');
+        $installDir = Setup::getValue(SetupKeys::INSTALL_DIR);
 
         // prepare source and target directory
         $source = sprintf('%s/resources/os-specific/%s/%s', $installDir, $os, $resource);
@@ -328,7 +327,7 @@ class Setup
      */
     public static function changeFilePermissions($filename, $mode = 0644)
     {
-        if (Setup::WINDOWS !== strtolower(php_uname('s'))) {
+        if (SetupKeys::OS_FAMILY_WINDOWS !== strtolower(php_uname('s'))) {
             chmod($filename, $mode);
         }
     }
