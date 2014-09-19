@@ -38,21 +38,21 @@ class Setup
      *
      * @var string
      */
-    const DARWIN = 'Darwin';
+    const DARWIN = 'darwin';
 
     /**
      * OS signature when calling php_uname('s') on Linux Debian/Ubuntu/Fedora and CentOS.
      *
      * @var string
      */
-    const LINUX = 'Linux';
+    const LINUX = 'linux';
 
     /**
      * OS signature when calling php_uname('s') on Windows.
      *
      * @var string
      */
-    const WINDOWS = 'Windows';
+    const WINDOWS = 'windows';
 
     /**
      * The array with the merged and os specific template variables.
@@ -91,30 +91,37 @@ class Setup
      */
     protected static $osProperties = array(
         'windows' => array(
+            'os.family' => Setup::WINDOWS,
             'appserver.user' => 'nobody',
             'appserver.group' => 'nobody'
          ),
         'darwin' => array(
+            'os.family' => Setup::DARWIN,
             'appserver.user' => 'nobody',
             'appserver.group' => 'staff'
          ),
         'debian' => array(
+            'os.family' => Setup::LINUX,
             'appserver.user' => 'www-data',
             'appserver.group' => 'www-data'
          ),
         'fedora' => array(
+            'os.family' => Setup::LINUX,
             'appserver.user' => 'nobody',
             'appserver.group' => 'nobody'
          ),
         'ubuntu' => array(
+            'os.family' => Setup::LINUX,
             'appserver.user' => 'www-data',
             'appserver.group' => 'www-data'
          ),
         'redhat' => array(
+            'os.family' => Setup::LINUX,
             'appserver.user' => 'nobody',
             'appserver.group' => 'nobody'
          ),
         'centOS' => array(
+            'os.family' => Setup::LINUX,
             'appserver.user' => 'nobody',
             'appserver.group' => 'nobody'
          )
@@ -178,7 +185,7 @@ class Setup
         // $event->getArguments()
 
         // load the OS signature
-        $os = php_uname('s');
+        $os = strtolower(php_uname('s'));
 
         // check what OS we are running on
         switch ($os) {
@@ -186,8 +193,18 @@ class Setup
             // installation running on Linux
             case Setup::LINUX:
 
-                // Get the distribution
-                $distribution = $this->getLinuxDistribution();
+                // get the distribution
+                $distribution = $this->getLinuxDistribution()
+                if ($distribution == null) { // if we cant find one of the supported systems
+
+                    // set debian as default
+                    $distribution = 'debian';
+
+                    // write a message to the console
+                    $event->getIo()->write(
+                        sprintf('Unknown Linux distribution found, use Debian default values: Please check user/group in etc/appserver/appserver.xml')
+                    );
+                }
 
                 Setup::$mergedProperties = array_merge(Setup::$defaultProperties, Setup::$osProperties[$distribution]);
                 break;

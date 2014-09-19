@@ -1,3 +1,23 @@
+<?php
+
+
+/**
+ * resources/templates/appserver.xml.phtml
+ *
+ * PHP version 5
+ *
+ * @category   Appserver
+ * @subpackage Composer
+ * @package    TechDivision_ApplicationServer
+ * @author     Tim Wagner <tw@techdivision.com>
+ * @copyright  2014 TechDivision GmbH <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io
+ */
+
+use AppserverIo\Meta\Composer\Script\Setup;
+
+?>
 <?xml version="1.0" encoding="UTF-8"?>
 <appserver xmlns="http://www.appserver.io/appserver">
 
@@ -91,7 +111,7 @@
 
                     <params>
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
-                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>)</param>
+                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
                         <param name="address" type="string">0.0.0.0</param>
                         <param name="port" type="integer">11210</param>
@@ -123,7 +143,7 @@
 
                     <params>
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
-                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>)</param>
+                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
                         <param name="address" type="string">0.0.0.0</param>
                         <param name="port" type="integer">8585</param>
@@ -184,7 +204,7 @@
 
                     <params>
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
-                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>)</param>
+                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
                         <param name="address" type="string">0.0.0.0</param>
                         <param name="port" type="integer">8587</param>
@@ -243,7 +263,7 @@
                         loggerName="System">
                     <params>
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
-                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>)</param>
+                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
                         <param name="address" type="string">0.0.0.0</param>
                         <param name="port" type="integer">8589</param>
@@ -271,7 +291,7 @@
                         loggerName="System">
                     <params>
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
-                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>)</param>
+                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="transport" type="string">tcp</param>
                         <param name="address" type="string">0.0.0.0</param>
                         <param name="port" type="integer">9080</param>
@@ -367,7 +387,7 @@
                         loggerName="System">
                     <params>
                         <param name="admin" type="string"><?php echo Setup::getValue('appserver.admin.email') ?></param>
-                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>)</param>
+                        <param name="software" type="string">appserver/<?php echo Setup::getValue('appserver.version') ?> (<?php echo Setup::getValue('os.family') ?>) PHP/<?php echo Setup::getValue('appserver.php.version') ?></param>
                         <param name="workerNumber" type="integer"><?php echo Setup::getValue('container.https.worker.number') ?></param>
                         <param name="workerAcceptMin" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMin') ?></param>
                         <param name="workerAcceptMax" type="integer"><?php echo Setup::getValue('container.server.worker.acceptMax') ?></param>
