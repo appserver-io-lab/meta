@@ -67,21 +67,21 @@ class Setup
      * @var array
      */
     protected static $defaultProperties = array(
-        'appserver.php.version' => PHP_VERSION,
-        'appserver.version' => '1.0.0-alpha',
-        'appserver.admin.email' => 'info@appserver.io',
-        'container.server.worker.acceptMin' => 3,
-        'container.server.worker.acceptMax' => 8,
-        'container.http.worker.number' => 64,
-        'container.https.worker.number' => 64,
+        'appserver.php.version'                         => PHP_VERSION,
+        'appserver.version'                             => '1.0.0-alpha',
+        'appserver.admin.email'                         => 'info@appserver.io',
+        'container.server.worker.acceptMin'             => 3,
+        'container.server.worker.acceptMax'             => 8,
+        'container.http.worker.number'                  => 64,
+        'container.https.worker.number'                 => 64,
         'container.persistence-container.worker.number' => 64,
-        'container.memcached.worker.number' => 8,
-        'container.message-queue.worker.number' => 8,
-        'php-fpm.host' => '127.0.0.1',
-        'php-fpm.port' => 9100,
-        'appserver.umask' => 0002,
-        'appserver.user' => 'nobody',
-        'appserver.group' => 'nobody'
+        'container.memcached.worker.number'             => 8,
+        'container.message-queue.worker.number'         => 8,
+        'php-fpm.port'                                  => 9100,
+        'php-fpm.host'                                  => '127.0.0.1',
+        'appserver.umask'                               => '0002',
+        'appserver.user'                                => 'nobody',
+        'appserver.group'                               => 'nobody'
     );
 
     /**
@@ -90,41 +90,13 @@ class Setup
      * @var array
      */
     protected static $osProperties = array(
-        'windows' => array(
-            'os.family' => Setup::WINDOWS,
-            'appserver.user' => 'nobody',
-            'appserver.group' => 'nobody'
-         ),
-        'darwin' => array(
-            'os.family' => Setup::DARWIN,
-            'appserver.user' => 'nobody',
-            'appserver.group' => 'staff'
-         ),
-        'debian' => array(
-            'os.family' => Setup::LINUX,
-            'appserver.user' => 'www-data',
-            'appserver.group' => 'www-data'
-         ),
-        'fedora' => array(
-            'os.family' => Setup::LINUX,
-            'appserver.user' => 'nobody',
-            'appserver.group' => 'nobody'
-         ),
-        'ubuntu' => array(
-            'os.family' => Setup::LINUX,
-            'appserver.user' => 'www-data',
-            'appserver.group' => 'www-data'
-         ),
-        'redhat' => array(
-            'os.family' => Setup::LINUX,
-            'appserver.user' => 'nobody',
-            'appserver.group' => 'nobody'
-         ),
-        'centOS' => array(
-            'os.family' => Setup::LINUX,
-            'appserver.user' => 'nobody',
-            'appserver.group' => 'nobody'
-         )
+        'darwin'  => array('os.family' => Setup::DARWIN, 'appserver.group' => 'staff'),
+        'debian'  => array('os.family' => Setup::LINUX,  'appserver.group' => 'www-data', 'appserver.user' => 'www-data'),
+        'ubuntu'  => array('os.family' => Setup::LINUX,  'appserver.group' => 'www-data', 'appserver.user' => 'www-data'),
+        'fedora'  => array('os.family' => Setup::LINUX),
+        'redhat'  => array('os.family' => Setup::LINUX),
+        'centOS'  => array('os.family' => Setup::LINUX),
+        'windows' => array('os.family' => Setup::WINDOWS)
     );
 
     /**
@@ -149,7 +121,7 @@ class Setup
         $etcList = scandir('/etc');
 
         // loop through /etc results...
-        $distro;
+        $distro = '';
 
         foreach ($etcList as $entry) { // iterate over all found files
 
@@ -171,6 +143,22 @@ class Setup
     }
 
     /**
+     * Merge the properties based on the passed OS.
+     *
+     * @param string $os The OS we want to merge the properties for
+     *
+     * @return void
+     */
+    public static function prepareProperties($os)
+    {
+        Setup::$mergedProperties = array_merge(
+            array('install.dir' => getcwd()),
+            Setup::$defaultProperties,
+            Setup::$osProperties[$distribution]
+        );
+    }
+
+    /**
      * This method will be invoked by composer after a successfull installation and creates
      * the application server configuration file under etc/appserver/appserver.xml.
      *
@@ -180,9 +168,6 @@ class Setup
      */
     public static function postInstall(Event $event)
     {
-
-        // $composer = $event->getComposer();
-        // $event->getArguments()
 
         // load the OS signature
         $os = strtolower(php_uname('s'));
@@ -194,7 +179,7 @@ class Setup
             case Setup::LINUX:
 
                 // get the distribution
-                $distribution = $this->getLinuxDistribution();
+                $distribution = Setup::getLinuxDistribution();
                 if ($distribution == null) { // if we cant find one of the supported systems
 
                     // set debian as default
@@ -202,23 +187,42 @@ class Setup
 
                     // write a message to the console
                     $event->getIo()->write(
-                        sprintf('Unknown Linux distribution found, use Debian default values: Please check user/group in etc/appserver/appserver.xml')
+                        sprintf(
+                            '<warning>Unknown Linux distribution found, use Debian default values: Please check user/group in etc/appserver/appserver.xml</warning>')
                     );
                 }
 
-                Setup::$mergedProperties = array_merge(Setup::$defaultProperties, Setup::$osProperties[$distribution]);
+                // merge the properties for the found Linux distribution
+                Setup::prepareProperties($distribution);
+
+                // process the binaries for the systemd services on Fedora
+                if ($distribution === 'fedora' || $distribution === 'redhat') {
+                    Setup::processTemplate('bin/appserver');
+                    Setup::processTemplate('bin/appserver-watcher');
+                }
                 break;
 
             // installation running on Mac OS X
             case Setup::DARWIN:
 
-                Setup::$mergedProperties = array_merge(Setup::$defaultProperties, Setup::$osProperties[Setup::DARWIN]);
+                // merge the properties for Mac OS X
+                Setup::prepareProperties($os);
+
+                // process the control files for the launchctl service
+                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserverctl');
+                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserver-watcherctl');
+                Setup::copyOsSpecificResource(Setup::DARWIN, 'sbin/appserver-php5-fpmctl');
+
+                // process the binaries for the launchctl service
+                Setup::processTemplate('bin/appserver');
+                Setup::processTemplate('bin/appserver-watcher');
                 break;
 
             // installation running on Windows
             case Setup::WINDOWS:
 
-                Setup::$mergedProperties = array_merge(Setup::$defaultProperties, Setup::$osProperties[Setup::WINDOWS]);
+                // merge the properties for Windows
+                Setup::prepareProperties($os);
                 break;
 
             // all other OS are NOT supported actually
@@ -227,8 +231,9 @@ class Setup
                 break;
         }
 
-        // process the template and save the configuration file
-        file_put_contents('etc/appserver/appserver.xml', Setup::processTemplate());
+        // process and move the configuration files their target directory
+        Setup::processTemplate('var/tmp/opcache-blacklist.txt');
+        Setup::processTemplate('etc/appserver/appserver.xml');
     }
 
     /**
@@ -244,14 +249,29 @@ class Setup
     }
 
     /**
+     * Copies the passed OS specific resource file to the target directory.
+     *
+     * @param string $os       The OS we want to copy the files for
+     * @param string $resource The resource file we want to copy
+     *
+     * @return void
+     */
+    public static function copyOsSpecificResource($os, $resource)
+    {
+        copy($resource, sprintf('resources/os-specific/%s/%s', $os, $resource));
+    }
+
+    /**
      * Processes the template and replace the properties with the OS specific values.
      *
-     * @return string The parsed template
+     * @param string $template The path to the template
+     *
+     * @return void
      */
-    public static function processTemplate()
+    public static function processTemplate($template)
     {
         ob_start();
-        include 'resources/templates/appserver.xml.phtml';
-        return ob_get_clean();
+        include sprintf('resources/templates/%s.phtml', $template);
+        file_put_contents($template, ob_get_clean());
     }
 }

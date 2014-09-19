@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * resources/templates/var/tmp/opcache-blacklist.txt.phtml
+ *
+ * PHP version 5
+ *
+ * @category   Appserver
+ * @subpackage Composer
+ * @package    TechDivision_ApplicationServer
+ * @author     Tim Wagner <tw@techdivision.com>
+ * @copyright  2014 TechDivision GmbH <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io
+ */
+
+use AppserverIo\Meta\Composer\Script\Setup;
+
+?>
+; Blacklists all PHP files in the webapps/demo directory and all subdirectories
+;<?php echo Setup::getValue('install.dir') ?>/webapps**/*.php
+
+; Blacklists all flow eel expression codes
+<?php echo Setup::getValue('install.dir') ?>/webapps/**/Eel_Expression_Code/*.php
+
+; Override core functions removed
+<?php echo Setup::getValue('install.dir') ?>/var/scripts/core_functions.php
