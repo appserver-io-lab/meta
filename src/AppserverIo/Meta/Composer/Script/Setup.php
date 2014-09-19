@@ -107,7 +107,7 @@ class Setup
             'appserver.group' => 'nobody'
          ),
         'ubuntu' => array(
-            'appserver.user' => 'www-data'
+            'appserver.user' => 'www-data',
             'appserver.group' => 'www-data'
          ),
         'redhat' => array(
