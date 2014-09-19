@@ -177,7 +177,7 @@ class Setup
         // prepare the context properties
         $contextProperties = array(
             SetupKeys::INSTALL_DIR => getcwd(),
-            SetupKeys::VERSION = $version
+            SetupKeys::VERSION => $version
         );
 
         // load the OS signature
@@ -219,7 +219,7 @@ class Setup
             case SetupKeys::OS_FAMILY_DARWIN:
 
                 // merge the properties for Mac OS X
-                Setup::prepareProperties($os $contextProperties);
+                Setup::prepareProperties($os, $contextProperties);
 
                 // process the control files for the launchctl service
                 Setup::copyOsSpecificResource(SetupKeys::OS_DARWIN, 'sbin/appserverctl', 0775);
@@ -235,7 +235,7 @@ class Setup
             case SetupKeys::OS_FAMILY_WINDOWS:
 
                 // merge the properties for Windows
-                Setup::prepareProperties($os $contextProperties);
+                Setup::prepareProperties($os, $contextProperties);
 
                 // process the control files for the launchctl service
                 Setup::copyOsSpecificResource(SetupKeys::OS_WINDOWS, 'appserver.bat');
