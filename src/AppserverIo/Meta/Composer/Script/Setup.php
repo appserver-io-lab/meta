@@ -194,7 +194,7 @@ class Setup
             case Setup::LINUX:
 
                 // get the distribution
-                $distribution = $this->getLinuxDistribution()
+                $distribution = $this->getLinuxDistribution();
                 if ($distribution == null) { // if we cant find one of the supported systems
 
                     // set debian as default
