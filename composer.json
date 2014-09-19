@@ -28,16 +28,18 @@
 		}
 	},
 	"autoload" : {
+        "psr-0" : {
+            "AppserverIo\\Meta" : [
+                "src/"
+            ]
+        },
 		"files" : [
 			"var/scripts/functions.php"
 		]
 	},
 	"scripts" : {
 		"post-install-cmd" : [
-			"TechDivision\\ApplicationServer\\Composer\\Script\\Setup::postInstall"
-		],
-		"post-update-cmd" : [
-			"TechDivision\\ApplicationServer\\Composer\\Script\\Setup::postUpdate"
+			"AppserverIo\\Meta\\Composer\\Script\\Setup::postInstall"
 		]
 	}
 }
