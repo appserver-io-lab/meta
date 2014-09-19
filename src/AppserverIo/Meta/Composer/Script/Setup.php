@@ -14,7 +14,7 @@
  * @link       http://www.appserver.io
  */
 
-namespace AppserverIo\Meta\Composer\Script\Setup;
+namespace AppserverIo\Meta\Composer\Script;
 
 use Composer\Script\Event;
 
