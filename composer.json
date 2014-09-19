@@ -28,11 +28,9 @@
 		}
 	},
 	"autoload" : {
-        "psr-0" : {
-            "AppserverIo\\Meta" : [
-                "src/"
-            ]
-        },
+		"psr-0" : {
+			"AppserverIo\\Meta\\" : [ "src/" ]
+		},
 		"files" : [
 			"var/scripts/functions.php"
 		]
