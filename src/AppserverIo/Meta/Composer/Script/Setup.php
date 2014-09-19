@@ -151,9 +151,11 @@ class Setup
      */
     public static function prepareProperties($os)
     {
-        Setup::$mergedProperties = array_merge(array(
-            'install.dir' => getcwd()
-        ), Setup::$defaultProperties, Setup::$osProperties[$os]);
+        Setup::$mergedProperties = array_merge(
+            array('install.dir' => getcwd()),
+            Setup::$defaultProperties,
+            Setup::$osProperties[$os]
+        );
     }
 
     /**
