@@ -29,10 +29,10 @@
 	},
 	"autoload" : {
 		"psr-0" : {
-			"AppserverIo\\Meta\\" : [ "src/" ]
+			"AppserverIo\\Meta\\" : "src/"
 		},
 		"files" : [
-			"var/scripts/functions.php"
+			"var/scripts/core_functions.php"
 		]
 	},
 	"scripts" : {
