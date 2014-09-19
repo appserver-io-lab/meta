@@ -30,10 +30,7 @@
 	"autoload" : {
 		"psr-0" : {
 			"AppserverIo\\Meta\\" : "src/"
-		},
-		"files" : [
-			"var/scripts/core_functions.php"
-		]
+		}
 	},
 	"scripts" : {
 		"post-install-cmd" : [
