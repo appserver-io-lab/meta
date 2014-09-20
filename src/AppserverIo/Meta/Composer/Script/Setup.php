@@ -224,8 +224,8 @@ class Setup
 
                 // process the binaries for the systemd services on Fedora
                 if ($distribution === SetupKeys::OS_FEDORA || $distribution === SetupKeys::OS_REDHAT) {
-                    Setup::processTemplate('bin/appserver', 0775);
-                    Setup::processTemplate('bin/appserver-watcher', 0775);
+                    Setup::processTemplate('bin/appserver', 0755);
+                    Setup::processTemplate('bin/appserver-watcher', 0755);
                 }
                 break;
 
@@ -236,16 +236,16 @@ class Setup
                 Setup::prepareProperties($os, $contextProperties);
 
                 // process the control files for the launchctl service
-                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserverctl', 0775);
-                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserver-watcherctl', 0775);
-                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserver-php5-fpmctl', 0775);
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserverctl', 0755);
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserver-watcherctl', 0755);
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserver-php5-fpmctl', 0755);
                 Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/plist/io.appserver.appserver.plist');
                 Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/plist/io.appserver.appserver-watcher.plist');
                 Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/plist/io.appserver.appserver-php5-fpm.plist');
 
                 // process the binaries for the launchctl service
-                Setup::processTemplate('bin/appserver', 0775);
-                Setup::processTemplate('bin/appserver-watcher', 0775);
+                Setup::processTemplate('bin/appserver', 0755);
+                Setup::processTemplate('bin/appserver-watcher', 0755);
                 break;
 
             // installation running on Windows
@@ -299,7 +299,7 @@ class Setup
      *
      * @return void
      */
-    public static function copyOsSpecificResource($os, $resource, $mode = 0664)
+    public static function copyOsSpecificResource($os, $resource, $mode = 0644)
     {
 
         // we need the installation directory
@@ -328,7 +328,7 @@ class Setup
      *
      * @return void
      */
-    public static function processOsSpecificTemplate($os, $template, $mode = 0664)
+    public static function processOsSpecificTemplate($os, $template, $mode = 0644)
     {
 
         // prepare the target directory
@@ -351,7 +351,7 @@ class Setup
      *
      * @return void
      */
-    public static function processTemplate($template, $mode = 0664)
+    public static function processTemplate($template, $mode = 0644)
     {
 
         // prepare the target directory
