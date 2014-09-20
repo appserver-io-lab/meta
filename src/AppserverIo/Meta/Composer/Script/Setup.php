@@ -204,7 +204,7 @@ class Setup
             case SetupKeys::OS_FAMILY_LINUX:
 
                 // get the distribution
-                $distribution = Setup::getLinuxDistribution();
+                $distribution = Setup::getLinuxDistro();
                 if ($distribution == null) { // if we cant find one of the supported systems
 
                     // set debian as default
