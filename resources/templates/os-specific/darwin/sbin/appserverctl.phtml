@@ -72,6 +72,10 @@ LAUNCHD_JOB="<?php echo Setup::getValue(SetupKeys::INSTALL_DIR) ?>/sbin/plist/$J
 
 
 run_launchctl() {
+    if [ $UID != 0 ]; then
+        echo This operation requires root.
+        exit 1
+    fi
     $LAUNCHCTL $@
 }
 
