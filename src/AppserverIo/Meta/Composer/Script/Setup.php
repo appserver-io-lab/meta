@@ -244,8 +244,8 @@ class Setup
                 Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/plist/io.appserver.appserver-php5-fpm.plist');
 
                 // process the binaries for the launchctl service
-                Setup::processTemplate('bin/appserver');
-                Setup::processTemplate('bin/appserver-watcher');
+                Setup::processTemplate('bin/appserver', 0775);
+                Setup::processTemplate('bin/appserver-watcher', 0775);
                 break;
 
             // installation running on Windows
