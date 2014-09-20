@@ -1,3 +1,23 @@
+<?php
+
+/**
+ * resources/templates/os-specific/darwin/sbin/appserverctl-watcherctl.phtml
+ *
+ * PHP version 5
+ *
+ * @category   Appserver
+ * @subpackage Composer
+ * @package    TechDivision_ApplicationServer
+ * @author     Tim Wagner <tw@techdivision.com>
+ * @copyright  2014 TechDivision GmbH <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io
+ */
+
+use AppserverIo\Meta\Composer\Script\Setup;
+use AppserverIo\Meta\Composer\Script\SetupKeys;
+
+?>
 #!/bin/sh
 #
 #
@@ -10,12 +30,12 @@
 #
 # The appserver control script designed to allow an easy command line interface
 # to controlling the appserver.  Written by Tim Wagner, 2013/07/24
-# 
+#
 # The exit codes returned are:
 #   XXX this doc is no longer correct now that the interesting
 #   XXX functions are handled by appserver
 #	0 - operation completed successfully
-#	1 - 
+#	1 -
 #	2 - usage error
 #	3 - appserver could not be started
 #	4 - appserver could not be stopped
@@ -47,14 +67,9 @@ ULIMIT_MAX_FILES=""
 
 LAUNCHCTL="/bin/launchctl"
 JOB_LABEL="io.appserver.appserver-watcher"
-LAUNCHD_JOB="/Library/LaunchDaemons/$JOB_LABEL.plist"
+LAUNCHD_JOB="<?php echo Setup::getValue(SetupKeys::INSTALL_DIR) ?>/sbin/plist/$JOB_LABEL.plist"
 
 run_launchctl() {
-    if [ $UID != 0 ]; then
-        echo This operation requires root.
-        exit 1
-    fi
-
     $LAUNCHCTL $@
 }
 
@@ -69,7 +84,7 @@ display_help() {
 }
 
 ERROR=0
-if [ "x$ARGV" = "x" ] ; then 
+if [ "x$ARGV" = "x" ] ; then
     ARGV="-h"
 fi
 

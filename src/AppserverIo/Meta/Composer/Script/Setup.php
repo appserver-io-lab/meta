@@ -36,6 +36,20 @@ class Setup
 {
 
     /**
+     * appserver.io written in ASCI art.
+     *
+     * @var string
+     */
+    protected static $logo = '                                                    _
+  ____ _____  ____  ________  ______   _____  _____(_)___
+ / __ `/ __ \/ __ \/ ___/ _ \/ ___/ | / / _ \/ ___/ / __ \
+/ /_/ / /_/ / /_/ (__  )  __/ /   | |/ /  __/ /  / / /_/ /
+\__,_/ .___/ .___/____/\___/_/    |___/\___/_(_)/_/\____/
+    /_/   /_/
+
+';
+
+    /**
      * The array with the merged and os specific template variables.
      *
      * @var array
@@ -222,9 +236,12 @@ class Setup
                 Setup::prepareProperties($os, $contextProperties);
 
                 // process the control files for the launchctl service
-                Setup::copyOsSpecificResource(SetupKeys::OS_DARWIN, 'sbin/appserverctl', 0775);
-                Setup::copyOsSpecificResource(SetupKeys::OS_DARWIN, 'sbin/appserver-watcherctl', 0775);
-                Setup::copyOsSpecificResource(SetupKeys::OS_DARWIN, 'sbin/appserver-php5-fpmctl', 0775);
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserverctl', 0775);
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserver-watcherctl', 0775);
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/appserver-php5-fpmctl', 0775);
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/plist/io.appserver.appserver.plist');
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/plist/io.appserver.appserver-watcher.plist');
+                Setup::processOsSpecificTemplate(SetupKeys::OS_DARWIN, 'sbin/plist/io.appserver.appserver-php5-fpm.plist');
 
                 // process the binaries for the launchctl service
                 Setup::processTemplate('bin/appserver');
@@ -251,6 +268,14 @@ class Setup
         // process and move the configuration files their target directory
         Setup::processTemplate('var/tmp/opcache-blacklist.txt');
         Setup::processTemplate('etc/appserver/appserver.xml');
+
+        // write a message to the console
+        $event->getIo()->write(
+            sprintf(
+                '%s<info>Thank you for installing appserver.io</info>',
+                Setup::$logo
+            )
+        );
     }
 
     /**
@@ -292,6 +317,30 @@ class Setup
 
         // set the correct mode for the file
         Setup::changeFilePermissions($target, $mode);
+    }
+
+    /**
+     * Processes the OS specific template and replace the properties with the OS specific values.
+     *
+     * @param string  $os       The OS we want to process the template for
+     * @param string  $template The path to the template
+     * @param integer $mode     The mode of the target file
+     *
+     * @return void
+     */
+    public static function processOsSpecificTemplate($os, $template, $mode = 0664)
+    {
+
+        // prepare the target directory
+        Setup::prepareDirectory($template);
+
+        // process the template and store the result in the passed file
+        ob_start();
+        include sprintf('resources/templates/os-specific/%s/%s.phtml', $os, $template);
+        file_put_contents($template, ob_get_clean());
+
+        // set the correct mode for the file
+        Setup::changeFilePermissions($template, $mode);
     }
 
     /**
