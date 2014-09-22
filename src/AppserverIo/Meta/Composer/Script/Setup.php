@@ -83,7 +83,7 @@ class Setup
         SetupKeys::CONTAINER_MESSAGE_QUEUE_PORT                  => 8587,
         SetupKeys::CONTAINER_WEB_SOCKET_HOST                     => SetupKeys::DEFAULT_HOST,
         SetupKeys::CONTAINER_WEB_SOCKET_PORT                     => 8589,
-        SetupKeys::PHP_FPM_PORT                                  => 9100,
+        SetupKeys::PHP_FPM_PORT                                  => 9010,
         SetupKeys::PHP_FPM_HOST                                  => SetupKeys::DEFAULT_HOST,
         SetupKeys::UMASK                                         => '0002',
         SetupKeys::USER                                          => 'nobody',
