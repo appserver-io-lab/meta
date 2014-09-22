@@ -194,8 +194,8 @@ class Setup
             SetupKeys::VERSION => $version
         );
 
-        // load the OS signature
-        $os = strtolower(php_uname('s'));
+        // load the OS signature => sscanf is necessary to detect Windows, e. g. Windows NT for Windows 7
+        list($os, ) = sscanf(strtolower(php_uname('s')), '%s %s');
 
         // check what OS we are running on
         switch ($os) {
