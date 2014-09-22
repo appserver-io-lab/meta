@@ -67,24 +67,24 @@ class Setup
         SetupKeys::CONTAINER_SERVER_WORKER_ACCEPT_MIN            => 3,
         SetupKeys::CONTAINER_SERVER_WORKER_ACCEPT_MAX            => 8,
         SetupKeys::CONTAINER_HTTP_WORKER_NUMBER                  => 64,
-        SetupKeys::CONTAINER_HTTP_HOST                           => '127.0.0.1',
+        SetupKeys::CONTAINER_HTTP_HOST                           => SetupKeys::DEFAULT_HOST,
         SetupKeys::CONTAINER_HTTP_PORT                           => 9080,
         SetupKeys::CONTAINER_HTTPS_WORKER_NUMBER                 => 64,
-        SetupKeys::CONTAINER_HTTPS_HOST                          => '127.0.0.1',
+        SetupKeys::CONTAINER_HTTPS_HOST                          => SetupKeys::DEFAULT_HOST,
         SetupKeys::CONTAINER_HTTPS_PORT                          => 9443,
         SetupKeys::CONTAINER_PERSISTENCE_CONTAINER_WORKER_NUMBER => 64,
-        SetupKeys::CONTAINER_PERSISTENCE_CONTAINER_HOST          => '127.0.0.1',
+        SetupKeys::CONTAINER_PERSISTENCE_CONTAINER_HOST          => SetupKeys::DEFAULT_HOST,
         SetupKeys::CONTAINER_PERSISTENCE_CONTAINER_PORT          => 8585,
         SetupKeys::CONTAINER_MEMCACHED_WORKER_NUMBER             => 8,
-        SetupKeys::CONTAINER_MEMCACHED_HOST                      => '127.0.0.1',
+        SetupKeys::CONTAINER_MEMCACHED_HOST                      => SetupKeys::DEFAULT_HOST,
         SetupKeys::CONTAINER_MEMCACHED_PORT                      => 11210,
         SetupKeys::CONTAINER_MESSAGE_QUEUE_WORKER_NUMBER         => 8,
-        SetupKeys::CONTAINER_MESSAGE_QUEUE_HOST                  => '127.0.0.1',
+        SetupKeys::CONTAINER_MESSAGE_QUEUE_HOST                  => SetupKeys::DEFAULT_HOST,
         SetupKeys::CONTAINER_MESSAGE_QUEUE_PORT                  => 8587,
-        SetupKeys::CONTAINER_WEB_SOCKET_HOST                     => '127.0.0.1',
+        SetupKeys::CONTAINER_WEB_SOCKET_HOST                     => SetupKeys::DEFAULT_HOST,
         SetupKeys::CONTAINER_WEB_SOCKET_PORT                     => 8589,
         SetupKeys::PHP_FPM_PORT                                  => 9100,
-        SetupKeys::PHP_FPM_HOST                                  => '127.0.0.1',
+        SetupKeys::PHP_FPM_HOST                                  => SetupKeys::DEFAULT_HOST,
         SetupKeys::UMASK                                         => '0002',
         SetupKeys::USER                                          => 'nobody',
         SetupKeys::GROUP                                         => 'nobody'
@@ -272,7 +272,7 @@ class Setup
         // write a message to the console
         $event->getIo()->write(
             sprintf(
-                '%s<info>Thank you for installing appserver.io</info>',
+                '%s<info>Successfully invoked appserver.io Composer post-install-cmd script ...</info>',
                 Setup::$logo
             )
         );
@@ -306,8 +306,8 @@ class Setup
         $installDir = Setup::getValue(SetupKeys::INSTALL_DIR);
 
         // prepare source and target directory
-        $source = sprintf('%s/resources/os-specific/%s/%s', $installDir, $os, $resource);
-        $target = sprintf('%s/%s', $installDir, $resource);
+        $source = Setup::prepareOsSpecificPath(sprintf('%s/resources/os-specific/%s/%s', $installDir, $os, $resource));
+        $target = Setup::prepareOsSpecificPath(sprintf('%s/%s', $installDir, $resource));
 
         // prepare the target directory
         Setup::prepareDirectory($target);
@@ -336,8 +336,8 @@ class Setup
 
         // process the template and store the result in the passed file
         ob_start();
-        include sprintf('resources/templates/os-specific/%s/%s.phtml', $os, $template);
-        file_put_contents($template, ob_get_clean());
+        include Setup::prepareOsSpecificPath(sprintf('resources/templates/os-specific/%s/%s.phtml', $os, $template));
+        file_put_contents(Setup::prepareOsSpecificPath($template), ob_get_clean());
 
         // set the correct mode for the file
         Setup::changeFilePermissions($template, $mode);
@@ -359,8 +359,8 @@ class Setup
 
         // process the template and store the result in the passed file
         ob_start();
-        include sprintf('resources/templates/%s.phtml', $template);
-        file_put_contents($template, ob_get_clean());
+        include Setup::prepareOsSpecificPath(sprintf('resources/templates/%s.phtml', $template));
+        file_put_contents(Setup::prepareOsSpecificPath($template), ob_get_clean());
 
         // set the correct mode for the file
         Setup::changeFilePermissions($template, $mode);
@@ -376,8 +376,13 @@ class Setup
      */
     public static function changeFilePermissions($filename, $mode = 0644)
     {
+
+        // make the passed filename OS compliant
+        $toBeChanged = Setup::prepareOsSpecificPath($filename);
+
+        // change the mode, if we're not on Windows
         if (SetupKeys::OS_FAMILY_WINDOWS !== strtolower(php_uname('s'))) {
-            chmod($filename, $mode);
+            chmod($toBeChanged, $mode);
         }
     }
 
@@ -391,8 +396,25 @@ class Setup
      */
     public static function prepareDirectory($directory, $mode = 0775)
     {
-        if (is_dir(dirname($directory)) === false) {
-            mkdir(dirname($directory), $mode, true);
+
+        // make the passed directory OS compliant
+        $toBePreapared = Setup::prepareOsSpecificPath($directory);
+
+        // make sure the directory exists
+        if (is_dir(dirname($toBePreapared)) === false) {
+            mkdir(dirname($toBePreapared), $mode, true);
         }
+    }
+
+    /**
+     * Prepares the passed path to work on the actual OS.
+     *
+     * @param string $path The path we want to perpare
+     *
+     * @return string The prepared path
+     */
+    public static function prepareOsSpecificPath($path)
+    {
+        return str_replace('/', DIRECTORY_SEPARATOR, $path);
     }
 }

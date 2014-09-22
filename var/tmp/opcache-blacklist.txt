@@ -1,0 +1,8 @@
+; Blacklists all PHP files in the webapps/demo directory and all subdirectories
+;/Users/wagnert/Workspace/appserver/master/meta/webapps**/*.php
+
+; Blacklists all flow eel expression codes
+/Users/wagnert/Workspace/appserver/master/meta/webapps/**/Eel_Expression_Code/*.php
+
+; Override core functions removed
+/Users/wagnert/Workspace/appserver/master/meta/var/scripts/core_functions.php
