@@ -131,6 +131,13 @@ class SetupKeys
     const INSTALL_DIR = 'appserver.install.dir';
 
     /**
+     * Default configuration for the host values.
+     *
+     * @var string
+     */
+    const DEFAULT_HOST = '127.0.0.1';
+
+    /**
      * Configuration key for 'appserver.php.version'.
      *
      * @var string
