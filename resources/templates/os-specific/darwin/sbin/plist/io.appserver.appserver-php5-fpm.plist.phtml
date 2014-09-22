@@ -27,7 +27,7 @@ use AppserverIo\Meta\Composer\Script\SetupKeys;
         <key>ProgramArguments</key>
         <array>
             <string><?php echo Setup::getValue(SetupKeys::INSTALL_DIR) ?>/sbin/php-fpm</string>
-            <string>--pid=<?php echo Setup::getValue(SetupKeys::INSTALL_DIR) ?>/sbin/var/run/appserver-php5-fpm.pid</string>
+            <string>--pid=<?php echo Setup::getValue(SetupKeys::INSTALL_DIR) ?>/var/run/appserver-php5-fpm.pid</string>
             <string>--nodaemonize</string>
         </array>
         <key>Debug</key>
