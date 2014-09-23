@@ -102,7 +102,12 @@ class Setup
         SetupKeys::OS_FEDORA  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_LINUX),
         SetupKeys::OS_REDHAT  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_LINUX),
         SetupKeys::OS_CENTOS  => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_LINUX),
-        SetupKeys::OS_WINDOWS => array(SetupKeys::OS_FAMILY => SetupKeys::OS_FAMILY_WINDOWS)
+        SetupKeys::OS_WINDOWS => array(
+            SetupKeys::OS_FAMILY                                     => SetupKeys::OS_FAMILY_WINDOWS,
+            SetupKeys::CONTAINER_HTTP_WORKER_NUMBER                  => 8,
+            SetupKeys::CONTAINER_HTTPS_WORKER_NUMBER                 => 8,
+            SetupKeys::CONTAINER_PERSISTENCE_CONTAINER_WORKER_NUMBER => 8
+        )
     );
 
     /**
@@ -256,7 +261,7 @@ class Setup
 
                 // process the control files for the launchctl service
                 Setup::copyOsSpecificResource(SetupKeys::OS_WINDOWS, 'appserver.bat');
-                Setup::copyOsSpecificResource(SetupKeys::OS_WINDOWS, 'appserver-php5-fpm.bat');
+                Setup::processOsSpecificTemplate(SetupKeys::OS_WINDOWS, 'appserver-php5-fpm.bat');
                 break;
 
             // all other OS are NOT supported actually
