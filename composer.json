@@ -16,7 +16,7 @@
 		"techdivision/persistencecontainer" : "0.9.*",
 		"techdivision/messagequeue" : "0.9.*",
 		"techdivision/servletengine" : "0.8.*",
-		"techdivision/websocketserver" : "0.3.*",
+		"techdivision/websocketserver" : "0.4.*",
 		"techdivision/memcacheserver" : "0.1.*"
 	},
 	"require-dev" : {
