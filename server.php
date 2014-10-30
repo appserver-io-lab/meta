@@ -26,11 +26,6 @@ use TechDivision\ApplicationServer\Utilities\DirectoryKeys;
 
 declare (ticks = 1);
 
-/**
- * Rewrite the SAPI to avoid invalid CLI SAPI detection for TYPO3 Flow for example
- *
- * @see https://github.com/techdivision/php-ext-appserver#ini-settings
- */
 error_reporting(~E_NOTICE);
 set_time_limit (0);
 
@@ -38,6 +33,9 @@ set_time_limit (0);
 ini_set('session.gc_maxlifetime', 0);
 ini_set('zend.enable_gc', 0);
 ini_set('max_execution_time', 0);
+
+// reset opcache
+opcache_reset();
 
 // set environmental variables in $_ENV globals per default
 $_ENV = appserver_get_envs();
