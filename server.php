@@ -34,9 +34,6 @@ ini_set('session.gc_maxlifetime', 0);
 ini_set('zend.enable_gc', 0);
 ini_set('max_execution_time', 0);
 
-// reset opcache
-opcache_reset();
-
 // set environmental variables in $_ENV globals per default
 $_ENV = appserver_get_envs();
 
@@ -83,4 +80,5 @@ if (array_key_exists($watch, $arguments)) {
     $server->watch();
 } else {
     $server->start();
+    $server->profile();
 }
