@@ -42,10 +42,8 @@ use AppserverIo\Meta\Composer\Script\SetupKeys;
         <provisioner name="datasource" type="TechDivision\ApplicationServer\DatasourceProvisioner" />
         <provisioner name="standard" type="TechDivision\ApplicationServer\StandardProvisioner" />
     </provisioners>
-    -->
 
     <loggers>
-        <!--
         <logger channelName="system" name="System" type="\AppserverIo\Logger\Logger">
             <handlers>
                 <handler type="\AppserverIo\Logger\Handlers\CustomFileHandler">
@@ -94,8 +92,8 @@ use AppserverIo\Meta\Composer\Script\SetupKeys;
                 </handler>
             </handlers>
         </logger>
-        -->
     </loggers>
+    -->
 
     <containers>
 
@@ -202,6 +200,8 @@ use AppserverIo\Meta\Composer\Script\SetupKeys;
                         <module type="\TechDivision\PersistenceContainer\PersistenceContainerModule" />
                         <!-- RESPONSE_PRE hook -->
                         <module type="\TechDivision\WebServer\Modules\DeflateModule"/>
+                        <!-- RESPONSE_POST hook -->
+                        <module type="\TechDivision\ApplicationServer\Modules\ProfileModule"/>
                     </modules>
 
                     <fileHandlers>
@@ -263,6 +263,8 @@ use AppserverIo\Meta\Composer\Script\SetupKeys;
                         <module type="\TechDivision\MessageQueue\MessageQueueModule" />
                         <!-- RESPONSE_PRE hook -->
                         <module type="\TechDivision\WebServer\Modules\DeflateModule"/>
+                        <!-- RESPONSE_POST hook -->
+                        <module type="\TechDivision\ApplicationServer\Modules\ProfileModule"/>
                     </modules>
 
                     <fileHandlers>
@@ -374,6 +376,8 @@ use AppserverIo\Meta\Composer\Script\SetupKeys;
                         <module type="\TechDivision\ServletEngine\ServletEngine" />
                         <!-- RESPONSE_PRE hook -->
                         <module type="\TechDivision\WebServer\Modules\DeflateModule"/>
+                        <!-- RESPONSE_POST hook -->
+                        <module type="\TechDivision\ApplicationServer\Modules\ProfileModule"/>
                     </modules>
 
                     <fileHandlers>
@@ -472,6 +476,8 @@ use AppserverIo\Meta\Composer\Script\SetupKeys;
                         <module type="\TechDivision\ServletEngine\ServletEngine" />
                         <!-- RESPONSE_PRE hook -->
                         <module type="\TechDivision\WebServer\Modules\DeflateModule"/>
+                        <!-- RESPONSE_POST hook -->
+                        <module type="\TechDivision\ApplicationServer\Modules\ProfileModule"/>
                     </modules>
 
                     <fileHandlers>
