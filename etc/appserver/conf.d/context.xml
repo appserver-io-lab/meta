@@ -26,6 +26,7 @@
     </classLoaders>
 
     <managers>
+        <manager name="dic" type="TechDivision\ApplicationServer\DependencyInjectionContainerFactory"/>
         <manager name="handler" type="TechDivision\WebSocketServer\HandlerManagerFactory"/>
         <manager name="bean" type="TechDivision\PersistenceContainer\BeanManagerFactory">
             <!-- params>
