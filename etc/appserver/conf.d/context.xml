@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <context type="TechDivision\Application\Application">
-
+    
     <classLoaders>
         <classLoader
             name="composer"
-            type="TechDivision\ApplicationServer\ComposerClassLoaderFactory">
+            type="TechDivision\ApplicationServer\ComposerClassLoader"
+            factory="TechDivision\ApplicationServer\ComposerClassLoaderFactory">
             <directories>
                 <directory>/vendor</directory>
             </directories>
         </classLoader>
         <classLoader
             name="pbc"
-            type="TechDivision\ApplicationServer\PbcClassLoaderFactory">
+            type="TechDivision\ApplicationServer\PbcClassLoader"
+            factory="TechDivision\ApplicationServer\PbcClassLoaderFactory">
             <params>
                 <param name="environment" type="string">production</param>
                 <param name="enforcementLevel" type="integer">7</param>
@@ -26,19 +28,19 @@
     </classLoaders>
 
     <managers>
-        <manager name="dic" type="TechDivision\ApplicationServer\DependencyInjectionContainerFactory"/>
-        <manager name="handler" type="TechDivision\WebSocketServer\HandlerManagerFactory"/>
-        <manager name="bean" type="TechDivision\PersistenceContainer\BeanManagerFactory">
+        <manager name="Provider" beanInterface="ProviderInterface" type="TechDivision\DependencyInjectionContainer\Provider" factory="TechDivision\DependencyInjectionContainer\ProviderFactory"/>
+        <manager name="HandlerManager" beanInterface="HandlerContext" type="TechDivision\WebSocketServer\HandlerManager" factory="TechDivision\WebSocketServer\HandlerManagerFactory"/>
+        <manager name="BeanManager" beanInterface="BeanContext" type="TechDivision\PersistenceContainer\BeanManager" factory="TechDivision\PersistenceContainer\BeanManagerFactory">
             <!-- params>
                 <param name="lifetime" type="integer">1440</param>
                 <param name="garbageCollectionProbability" type="float">0.1</param>
             </params -->
         </manager>
-        <manager name="queue" type="TechDivision\MessageQueue\QueueManagerFactory"/>
-        <manager name="servlet" type="TechDivision\ServletEngine\ServletManagerFactory"/>
-        <manager name="session" type="TechDivision\ServletEngine\StandardSessionManagerFactory"/>
-        <manager name="timerservice" type="TechDivision\PersistenceContainer\TimerServiceRegistryFactory"/>
-        <manager name="authentication" type="TechDivision\ServletEngine\Authentication\StandardAuthenticationManagerFactory"/>
+        <manager name="QueueManager" beanInterface="QueueContext" type="TechDivision\MessageQueue\QueueManager" factory="TechDivision\MessageQueue\QueueManagerFactory"/>
+        <manager name="ServletManager" beanInterface="ServletContext" type="TechDivision\ServletEngine\ServletManager" factory="TechDivision\ServletEngine\ServletManagerFactory"/>
+        <manager name="StandardSessionManager" beanInterface="SessionManager" type="TechDivision\ServletEngine\StandardSessionManager" factory="TechDivision\ServletEngine\StandardSessionManagerFactory"/>
+        <manager name="TimerServiceRegistry" beanInterface="TimerServiceContext" type="TechDivision\PersistenceContainer\TimerServiceRegistry" factory="TechDivision\PersistenceContainer\TimerServiceRegistryFactory"/>
+        <manager name="StandardAuthenticationManager" beanInterface="AuthenticationManager" type="TechDivision\ServletEngine\Authentication\StandardAuthenticationManager" factory="TechDivision\ServletEngine\Authentication\StandardAuthenticationManagerFactory"/>
     </managers>
 
 </context>

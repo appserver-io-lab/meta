@@ -65,6 +65,7 @@
             </xs:choice>
             <xs:attribute name="name" type="xs:string" />
             <xs:attribute name="type" type="xs:string" />
+            <xs:attribute name="factory" type="xs:string" use="optional"/>
             <xs:attribute name="uuid" type="xs:string" />
         </xs:complexType>
     </xs:element>
@@ -570,7 +571,11 @@
                 <xs:element ref="appserver:params" />
             </xs:choice>
             <xs:attribute name="name" type="xs:string" />
+            <xs:attribute name="beanName" type="xs:string" use="optional"/>
+            <xs:attribute name="mappedName" type="xs:string" use="optional" />
+            <xs:attribute name="beanInterface" type="xs:string" use="optional" />
             <xs:attribute name="type" type="xs:string" />
+            <xs:attribute name="factory" type="xs:string" use="optional" />
             <xs:attribute name="uuid" type="xs:string" />
         </xs:complexType>
     </xs:element>
